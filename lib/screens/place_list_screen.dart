@@ -1,6 +1,6 @@
 import 'package:favorite_place_app/main.dart';
-import 'package:favorite_place_app/widgets/add_place_widget.dart';
-import 'package:favorite_place_app/widgets/place_widget.dart';
+import 'package:favorite_place_app/screens/add_place_screen.dart';
+import 'package:favorite_place_app/widgets/place_list_widget.dart';
 import 'package:flutter/material.dart';
 
 class PlaceListScreen extends StatelessWidget {
@@ -16,14 +16,14 @@ class PlaceListScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => AddPlaceWidget(),
+                    builder: (context) => AddPlaceScreen(),
                   ),
                 );
               },
               icon: const Icon(Icons.add))
         ],
       ),
-      body: const PlaceWidget(),
+      body: const PlaceListWidget(),
     );
   }
 }
