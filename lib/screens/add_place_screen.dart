@@ -1,5 +1,6 @@
 import 'package:favorite_place_app/models/place.dart';
 import 'package:favorite_place_app/providers/place_provider.dart';
+import 'package:favorite_place_app/widgets/fetch_location.dart';
 import 'package:favorite_place_app/widgets/image_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,6 +26,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PlaceLocation? placeLocation;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add new place'),
@@ -46,11 +48,19 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                 });
               },
             ),
+            const SizedBox(
+              height: 12,
+            ),
+            FetchLocation(
+              onFetchLocation: (location) {
+                placeLocation = location;
+              },
+            ),
             const SizedBox(height: 12),
             ElevatedButton.icon(
               icon: const Icon(Icons.add),
               onPressed: () {
-                if (placeTitleController.text.isEmpty || pickedImage == null) {
+                if (placeTitleController.text.isEmpty || pickedImage == null || placeLocation == null) {
                   Fluttertoast.showToast(
                     msg: "Please fill all required fields",
                     toastLength: Toast.LENGTH_SHORT,
@@ -59,12 +69,13 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                 } else {
                   ref.read(placeProvider.notifier).addPlace(
                         Place(
-                            title: placeTitleController.text,
-                            image: pickedImage!),
+                          title: placeTitleController.text,
+                          image: pickedImage!,
+                          location: placeLocation!
+                        ),
                       );
                   Navigator.of(context).pop();
                 }
-                print(placeTitleController.text);
               },
               label: const Text('Add Place'),
             ),
