@@ -3,7 +3,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class ImageCapture extends StatefulWidget {
-  const ImageCapture({super.key});
+  const ImageCapture({super.key, required this.onPicImage});
+  final void Function(File image) onPicImage;
   @override
   State<ImageCapture> createState() {
     return _ImageCaptureState();
@@ -20,6 +21,7 @@ class _ImageCaptureState extends State<ImageCapture> {
     setState(() {
       _picture = File(pickedImage.path);
     });
+    widget.onPicImage(_picture!);
   }
 
   @override
@@ -32,12 +34,12 @@ class _ImageCaptureState extends State<ImageCapture> {
     if (_picture != null) {
       content = InkWell(
         onTap: _takePicture,
-          child: Image.file(
-        _picture!,
-        fit: BoxFit.cover,
-        height: double.infinity,
-        width: double.infinity,
-      ),
+        child: Image.file(
+          _picture!,
+          fit: BoxFit.cover,
+          height: double.infinity,
+          width: double.infinity,
+        ),
       );
     }
     return Container(

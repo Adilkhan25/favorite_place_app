@@ -16,7 +16,7 @@ class PlaceListScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => AddPlaceScreen(),
+                    builder: (context) => const AddPlaceScreen(),
                   ),
                 );
               },

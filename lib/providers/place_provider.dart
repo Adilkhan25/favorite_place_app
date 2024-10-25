@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class PlaceNotifer extends StateNotifier<List<Place>> {
   PlaceNotifer() : super(const []);
   void addPlace(Place place) {
-    state = [place,...state];
+    state = [place, ...state];
   }
 
   // List<Place> getPlaces() {
