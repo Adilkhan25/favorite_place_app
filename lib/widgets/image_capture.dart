@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
@@ -14,14 +15,22 @@ class ImageCapture extends StatefulWidget {
 class _ImageCaptureState extends State<ImageCapture> {
   File? _picture;
   void _takePicture() async {
-    final imagePicker = ImagePicker();
-    final pickedImage =
-        await imagePicker.pickImage(source: ImageSource.camera, maxWidth: 600);
-    if (pickedImage == null) return;
-    setState(() {
-      _picture = File(pickedImage.path);
-    });
-    widget.onPicImage(_picture!);
+    try {
+      final imagePicker = ImagePicker();
+      final pickedImage = await imagePicker.pickImage(
+          source: ImageSource.camera, maxWidth: 600);
+      if (pickedImage == null) return;
+      setState(() {
+        _picture = File(pickedImage.path);
+      });
+      widget.onPicImage(_picture!);
+    } catch (e) {
+      Fluttertoast.showToast(
+          msg:
+              'Oops! something went to wrong while taking the picture, please try again.',
+          gravity: ToastGravity.BOTTOM,
+          textColor: Colors.red);
+    }
   }
 
   @override

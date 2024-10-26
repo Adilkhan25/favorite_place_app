@@ -1,4 +1,6 @@
 import 'package:favorite_place_app/models/place.dart';
+import 'package:favorite_place_app/screens/map_screen.dart';
+import 'package:favorite_place_app/widgets/map_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:location/location.dart';
@@ -17,6 +19,7 @@ class FetchLocation extends StatefulWidget {
 class _FetchLocationState extends State<FetchLocation> {
   bool isLocationFetching = false;
   PlaceLocation? pickedLocation;
+
   void fetchCurrentLocation() async {
     try {
       final location = Location();
@@ -81,14 +84,7 @@ class _FetchLocationState extends State<FetchLocation> {
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                 )
-              : Text(
-                  pickedLocation!.address,
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
-                ),
+              : MapPreview(lat: pickedLocation!.lat, lng: pickedLocation!.long),
     );
 
     return Column(
@@ -107,7 +103,10 @@ class _FetchLocationState extends State<FetchLocation> {
             ),
             TextButton.icon(
               icon: const Icon(Icons.navigation),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (ctx) => MapScreen()));
+              },
               label: const Text('Choose location manually'),
             ),
           ],

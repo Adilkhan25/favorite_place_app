@@ -60,7 +60,9 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
             ElevatedButton.icon(
               icon: const Icon(Icons.add),
               onPressed: () {
-                if (placeTitleController.text.isEmpty || pickedImage == null || placeLocation == null) {
+                if (placeTitleController.text.isEmpty ||
+                    pickedImage == null ||
+                    placeLocation == null) {
                   Fluttertoast.showToast(
                     msg: "Please fill all required fields",
                     toastLength: Toast.LENGTH_SHORT,
@@ -69,10 +71,9 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                 } else {
                   ref.read(placeProvider.notifier).addPlace(
                         Place(
-                          title: placeTitleController.text,
-                          image: pickedImage!,
-                          location: placeLocation!
-                        ),
+                            title: placeTitleController.text,
+                            image: pickedImage!,
+                            location: placeLocation!),
                       );
                   Navigator.of(context).pop();
                 }
