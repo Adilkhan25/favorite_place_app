@@ -3,6 +3,7 @@ import 'package:favorite_place_app/screens/map_screen.dart';
 import 'package:favorite_place_app/widgets/map_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:location/location.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -65,7 +66,43 @@ class _FetchLocationState extends State<FetchLocation> {
 
   @override
   Widget build(BuildContext context) {
-    Widget preview = Container(
+    return Column(
+      children: [
+        preview,
+        const SizedBox(
+          height: 12,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton.icon(
+              icon: const Icon(Icons.location_on),
+              onPressed: fetchCurrentLocation,
+              label: const Text('Fetch current location'),
+            ),
+            TextButton.icon(
+              icon: const Icon(Icons.navigation),
+              onPressed: () async {
+                final selectLocation = await Navigator.of(context)
+                    .push<PlaceLocation>(
+                        MaterialPageRoute(builder: (ctx) => const MapScreen()));
+                print(' lat ${selectLocation!.lat} and lon ${selectLocation.long}');
+                setState(() {
+                  pickedLocation = selectLocation;
+
+                  widget.onFetchLocation(pickedLocation!);
+                });
+              },
+              label: const Text('Choose location manually'),
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget get preview {
+    return Container(
       padding: const EdgeInsets.all(8),
       height: 170,
       width: double.infinity,
@@ -85,33 +122,6 @@ class _FetchLocationState extends State<FetchLocation> {
                       ),
                 )
               : MapPreview(lat: pickedLocation!.lat, lng: pickedLocation!.long),
-    );
-
-    return Column(
-      children: [
-        preview,
-        const SizedBox(
-          height: 12,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            TextButton.icon(
-              icon: const Icon(Icons.location_on),
-              onPressed: fetchCurrentLocation,
-              label: const Text('Fetch current location'),
-            ),
-            TextButton.icon(
-              icon: const Icon(Icons.navigation),
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (ctx) => MapScreen()));
-              },
-              label: const Text('Choose location manually'),
-            ),
-          ],
-        )
-      ],
     );
   }
 }

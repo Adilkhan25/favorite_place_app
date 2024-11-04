@@ -1,3 +1,4 @@
+import 'package:favorite_place_app/models/place.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -13,15 +14,22 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  LatLng? selectedLocation;
+  PlaceLocation? selectedLocation;
   final MapController _mapController = MapController();
   final TextEditingController _searchController = TextEditingController();
   List<dynamic> _searchResults = [];
   final FocusNode _focusNode = FocusNode();
 
-  void _onMapTap(LatLng latLng) {
+  void _onMapTap(LatLng latLng) async {
+    final lat = latLng.latitude;
+    final lon = latLng.longitude;
+    final response = await http.get(Uri.parse(
+        'https://nominatim.openstreetmap.org/reverse?lat=$lat&lon=$lon&format=json'));
+
+    final data = jsonDecode(response.body);
     setState(() {
-      selectedLocation = latLng;
+      selectedLocation =
+          PlaceLocation(lat: lat, long: lon, address: data['displaye-name']);
       _searchResults.clear();
     });
   }
@@ -60,8 +68,9 @@ class _MapScreenState extends State<MapScreen> {
     final lat = double.parse(result['lat']);
     final lon = double.parse(result['lon']);
     setState(() {
-      selectedLocation = LatLng(lat, lon);
-      _mapController.move(selectedLocation!, 15.0);
+      selectedLocation =
+          PlaceLocation(lat: lat, long: lon, address: result['display-name'].toString());
+      _mapController.move(LatLng(lat, lon), 15.0);
       _searchResults.clear();
     });
   }
@@ -111,7 +120,8 @@ class _MapScreenState extends State<MapScreen> {
                           Marker(
                             width: 80.0,
                             height: 80.0,
-                            point: selectedLocation!,
+                            point: LatLng(
+                                selectedLocation!.lat, selectedLocation!.long),
                             child: const Icon(Icons.location_pin,
                                 color: Colors.red, size: 40),
                           ),
